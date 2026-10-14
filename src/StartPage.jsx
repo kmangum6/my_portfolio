@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./stylesheet.css";
+import Contact from "./ContactForm";
 
 const LINKS = [{label: "Projects Overview", href: "#overview"},{label: "Project 1", href: "#"}, {label: "Project 2", href: "#"}, {label: "Project 3", href: "#"}, { label: "Contact", href: "#contact" }];
 
@@ -21,11 +22,6 @@ function Navbar() {
           ))}
         </div>
       )}
-      <div className={`sp-drawer ${open ? "open" : ""}`}>
-        {LINKS.map((l) => (
-          <a key={l.label} href={l.href} onClick={() => setOpen(false)}>{l.label}</a>
-        ))}
-      </div>
     </nav>
   );
 }
@@ -35,7 +31,7 @@ function Hero() {
     <header className="sp-hero" id="home">
       <div>
         <h1>KAYLEEN MANGUM</h1>
-        <p>Backend Software Development for SQL, Typescript, and Python</p>
+        <p>Backend Software Development for SQL, TypeScript, and Python</p>
         <div className="sp-btn-group">
           <a className="sp-btn" href="#overview">View My Work</a>
           <a className="sp-btn" href="#contact">Contact Me</a>
@@ -60,7 +56,7 @@ function Feature({ title, text, body, reverse, tone }) {
   );
 }
 
-function Contact() {
+function CallToAction() {
   return (
     <section className="sp-contact">
       <h1>Looking for a developer for a technical role? Let's talk!</h1>
@@ -90,9 +86,10 @@ export default function StartPage() {
       <Navbar />
       <Hero />
       <div id="about">
-        <Feature title="About Me" text="I’m a backend-focused developer finishing my B.S. in Software Engineering at Western Governors University." body="In my current role at Fishbowl, I write and debug SQL queries, repair JXML report scripts, and troubleshoot API integrations with QuickBooks, Shopify, Amazon, and more. Before that, I worked on training data for Tesla’s Optimus robot, and I spent a year diagnosing hardware issues at ThermoWorks. Years of explaining technical problems to non-technical people taught me to write clear code and clearer documentation. I’m looking for a junior backend or software role where I can keep building on SQL, Python, and TypeScript." tone="a" />
+        <Feature title="About Me" text="Backend-focused developer finishing my B.S. in Software Engineering." body="In my current role at Fishbowl, I write and debug SQL queries, repair JXML report scripts, and troubleshoot API integrations with QuickBooks, Shopify, Amazon, and more. Before that, I worked on training data for Tesla’s Optimus robot, and I spent a year diagnosing hardware issues at ThermoWorks. Years of explaining technical problems to non-technical people taught me to write clear code and clearer documentation. I’m looking for a junior backend or software role where I can keep building on SQL, Python, and TypeScript." tone="a" />
         <Feature title="How I Work" text="Clear communication and constant documentation." body="Years of explaining technical problems to non-technical customers taught me to work in both directions: turning technical details into plain language, and turning what someone wants from their software into clear requirements. Understanding the need first is how I build something that actually solves it. I also document my work thoroughly, recording what changed, why, and how to undo it, so anyone can pick up where I left off - including me!" tone="b" reverse />
       </div>
+      <CallToAction />
       <Contact />
       <Footer />
     </div>
