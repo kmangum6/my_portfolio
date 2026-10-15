@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS user (
     FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
-/* Ticket in the system details */
 CREATE TABLE IF NOT EXISTS ticket (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     title           TEXT NOT NULL,
@@ -39,13 +38,12 @@ CREATE TABLE IF NOT EXISTS ticket (
     FOREIGN KEY (resolved_by) REFERENCES user(id)
 );
 
-/* Categories that tickets could be sorted by in the js */
+/* Categories for tickets to be put into */
 CREATE TABLE IF NOT EXISTS category (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     name            TEXT NOT NULL UNIQUE
 );
 
-/* Company details */
 CREATE TABLE IF NOT EXISTS company (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     name            TEXT NOT NULL,

@@ -3,7 +3,7 @@ import db from '../db.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 
 const router = Router();
-router.use(requireAuth); // every ticket route requires a logged-in, active user
+router.use(requireAuth); 
 
 const STATUSES = ['open', 'pending', 'in_progress', 'closed'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
@@ -23,8 +23,6 @@ const TICKET_SELECT = `
   LEFT JOIN user au    ON au.id = t.assigned_to
 `;
 
-// Returns the ticket, or null if it doesn't exist OR the user isn't allowed to see it.
-// Returning 404 for both avoids revealing which ticket IDs exist.
 function getTicketForUser(id, user) {
   const ticket = db.prepare(`${TICKET_SELECT} WHERE t.id = ?`).get(id);
   if (!ticket) return null;
@@ -39,6 +37,19 @@ function logEvent(ticketId, actorId, type, oldValue, newValue) {
   `).run(ticketId, actorId, type, oldValue, newValue);
 }
 
+// ---------- DROPDOWN OPTIONS ----------
+router.get('/options', (req, res) => {
+  const categories = db.prepare('SELECT id, name FROM category ORDER BY name').all();
+  const agents = isStaff(re.user)
+    ? db.prepare(`
+      SELECT id, name FROM user
+      WHERE type IN ('agent','admin') AND status = 'active'
+      ORDER BY name
+    `).all()
+    : [];
+  res.json({ statuses: STATUSES, priorities: PRIORITIES, categories });
+});
+
 // ---------- LIST ----------
 router.get('/', (req, res) => {
   const { status, priority, assigned_to, category_id, search } = req.query;
@@ -48,7 +59,6 @@ router.get('/', (req, res) => {
   const where = [];
   const params = [];
 
-  // Regular users only see their own company's tickets
   if (!isStaff(req.user)) {
     where.push('t.company_id = ?');
     params.push(req.user.company_id);
@@ -117,7 +127,6 @@ router.get('/:id', (req, res) => {
 
   const staff = isStaff(req.user);
 
-  // Internal notes (public = 'false') are hidden from regular users
   const comments = db.prepare(`
     SELECT cm.*, u.name AS author_name
     FROM comment cm
@@ -126,7 +135,6 @@ router.get('/:id', (req, res) => {
     ORDER BY cm.created_at, cm.id
   `).all(ticket.id);
 
-  // The audit log is staff-only
   const events = staff
     ? db.prepare(`
         SELECT e.*, u.name AS actor_name
@@ -146,7 +154,7 @@ router.patch('/:id', requireRole('agent', 'admin'), (req, res) => {
   if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
 
   const body = req.body ?? {};
-  const changes = {}; // column -> new value (only things that actually changed)
+  const changes = {}; 
 
   if ('status' in body) {
     if (!STATUSES.includes(body.status)) return res.status(400).json({ error: 'Invalid status' });
@@ -157,7 +165,7 @@ router.patch('/:id', requireRole('agent', 'admin'), (req, res) => {
     if (body.priority !== ticket.priority) changes.priority = body.priority;
   }
   if ('assigned_to' in body) {
-    const target = body.assigned_to; // an id, or null to unassign
+    const target = body.assigned_to;
     if (target !== null) {
       const assignee = db.prepare('SELECT type, status FROM user WHERE id = ?').get(target);
       if (!assignee || assignee.status !== 'active' || !['agent', 'admin'].includes(assignee.type)) {
@@ -175,12 +183,10 @@ router.patch('/:id', requireRole('agent', 'admin'), (req, res) => {
   }
 
   if (Object.keys(changes).length === 0) {
-    return res.json(getTicketForUser(ticket.id, req.user)); // nothing to do
+    return res.json(getTicketForUser(ticket.id, req.user)); 
   }
 
   const apply = db.transaction(() => {
-    // Column names come from the whitelist above, never from user input,
-    // so building the SET clause this way is safe. Values still use placeholders.
     const sets = Object.keys(changes).map((col) => `${col} = ?`);
     const values = Object.values(changes);
 
@@ -192,7 +198,7 @@ router.patch('/:id', requireRole('agent', 'admin'), (req, res) => {
         sets.push(`resolved_at = datetime('now')`, 'resolved_by = ?');
         values.push(req.user.id);
       } else {
-        sets.push('resolved_at = NULL', 'resolved_by = NULL'); // reopened
+        sets.push('resolved_at = NULL', 'resolved_by = NULL'); 
       }
     }
 
@@ -205,9 +211,13 @@ router.patch('/:id', requireRole('agent', 'admin'), (req, res) => {
       category_id: 'category_changed',
     };
     for (const [col, newVal] of Object.entries(changes)) {
-      logEvent(ticket.id, req.user.id, eventTypes[col],
-               ticket[col] == null ? null : String(ticket[col]),
-               newVal == null ? null : String(newVal));
+      let value_from = ticket[col] == null ? null : String(ticket[col]);
+      let value_to = newVal == null ? null : String(newVal);
+
+      if (col === 'assigned_to') { value_from = nameOf('user', ticket[col]); value_to == NameOf('user', newVal); }
+      if (col == 'category_id') { value_from = nameOf('category', ticket[col]); value_to = nameOf('category', newVal); }
+
+      logEvent(ticket.id, req.user.id, eventTypes[col], value_from, value_to);
     }
   });
 
@@ -223,7 +233,6 @@ router.post('/:id/comments', (req, res) => {
   const { body, public: isPublic = true } = req.body ?? {};
   if (!body?.trim()) return res.status(400).json({ error: 'Comment body is required' });
 
-  // Regular users can only post public comments. Staff can choose.
   const publicValue = isStaff(req.user) && isPublic === false ? 'false' : 'true';
 
   const result = db.prepare(`
