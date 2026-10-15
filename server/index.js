@@ -2,6 +2,7 @@ import express from 'express';
 import db from './db.js';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.js';
+import ticketRoutes from './routes/tickets.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,6 +11,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 // Quick check that the server and database are working
 app.get('/api/health', (req, res) => {
