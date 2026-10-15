@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import db from './db.js'
+import db from './db.js';
 
 db.exec(`
     DELETE FROM ticket_event;
@@ -28,8 +28,8 @@ const [general, billing, bug, feature] = ['General', 'Billing', 'Bug', 'Feature 
 
 // Users
 const insertUser = db.prepare(`
-  INSERT INTO user (name, email, prim_phone, password_hash, type, company_id, prim_contact)
-  VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO user (name, email, prim_phone, password_hash, type, company_id, prim_contact)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
 `);
 const admin = insertUser.run('Alex Admin', 'admin@demo.com', '555-0101', hash, 'admin', support, 'false').lastInsertRowid;
 const agent = insertUser.run('Riley Agent', 'agent@demo.com', '555-0102', hash, 'agent', support, 'false').lastInsertRowid;

@@ -1,11 +1,15 @@
 import express from 'express';
 import db from './db.js';
+import cookieParser from 'cookie-parser';
+import authRoutes from './routes/auth.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Parse JSON request bodies
 app.use(express.json());
+app.use(cookieParser());
+app.use('/api/auth', authRoutes);
 
 // Quick check that the server and database are working
 app.get('/api/health', (req, res) => {
