@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import{ useAuth } from './AuthContext';
 
 export default function Login() {
@@ -30,6 +30,7 @@ export default function Login() {
 
     return (
         <div style={{ maxWidth: 360, margin: '4rem auto' }}>
+            <Link to="/">Back to Portfolio Home</Link>
             <h1>Help Desk Login</h1>
 
             <form onSubmit={handleSubmit}>

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import StartPage from './StartPage'
 import { AuthProvider, useAuth } from './helpdesk/AuthContext'
 import ProtectedRoute from './helpdesk/ProtectedRoute'
@@ -9,6 +9,7 @@ function HelpdeskHome() {
   const { user, logout } = useAuth();
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto', padding: '1rem' }}>
+      <Link to="/">Back to Portfolio Home</Link>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Help Desk</h1>
         <div>
