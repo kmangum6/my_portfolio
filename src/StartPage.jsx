@@ -1,8 +1,21 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "./stylesheet.css";
 import Contact from "./ContactForm";
 
-const LINKS = [{label: "Projects Overview", href: "#overview"},{label: "Project 1", href: "#"}, {label: "Project 2", href: "#"}, {label: "Project 3", href: "#"}, { label: "Contact", href: "#contact" }];
+const LINKS = [
+  { label: "Projects Overview", href: "#overview" },
+  { label: "Helpdesk Demo", href: "/helpdesk/login" },
+  { label: "Project 2", href: "#" },
+  { label: "Project 3", href: "#" },
+  { label: "Contact", href: "#contact" },
+];
+
+function NavItem({ href, onClick, children }) {
+  return href.startsWith("/")
+    ? <Link to={href} onClick={onClick}>{children}</Link>
+    : <a href={href} onClick={onClick}>{children}</a>;
+}
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -10,7 +23,7 @@ function Navbar() {
     <nav className="sp-nav" aria-label="Main">
       <a className="sp-home" href="#home">Home</a>
       <div className="sp-links">
-        {LINKS.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
+        {LINKS.map((l) => <NavItem key={l.label} href={l.href}>{l.label}</NavItem>)}
       </div>
       <button className="sp-burger" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle menu">
         ☰
@@ -18,7 +31,7 @@ function Navbar() {
       {open && (
         <div className="sp-drawer">
           {LINKS.map((l) => (
-            <a key={l.label} href={l.href} onClick={() => setOpen(false)}>{l.label}</a>
+            <NavItem key={l.label} href={l.href} onClick={() => setOpen(false)}>{l.label}</NavItem>
           ))}
         </div>
       )}

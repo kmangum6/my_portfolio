@@ -7,7 +7,7 @@ export default function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = usState('');
+    const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
     async function attempt(e,p) {

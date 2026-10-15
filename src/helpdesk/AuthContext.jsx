@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import {api } from './api';
 
-const AuthContext = creatContext(null);
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [loading, setLoadint] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     // Check Login
     useEffect(() => {
@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const u = await api('/auth/login', { method: 'POST', body: { email, password } });
-    setser(u);
+    setUser(u);
     return u;
   };
 
@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, loutout}}>
+    <AuthContext.Provider value={{ user, loading, login, logout}}>
         {children}
     </AuthContext.Provider>
   );

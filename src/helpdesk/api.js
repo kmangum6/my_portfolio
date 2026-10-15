@@ -6,6 +6,6 @@ export async function api(path, { method = 'GET', body } = {}) {
     });
 
     const data = await res.json().catch(() => null);
-    if (!res.ok) throw new Error(data?.error || 'REquest failed');
+    if (!res.ok) throw new Error(data?.error || 'Request failed');
     return data;
 }
