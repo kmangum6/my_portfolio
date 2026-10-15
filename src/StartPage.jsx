@@ -6,8 +6,6 @@ import Contact from "./ContactForm";
 const LINKS = [
   { label: "Projects Overview", href: "#overview" },
   { label: "Helpdesk Demo", href: "/helpdesk/login" },
-  { label: "Project 2", href: "#" },
-  { label: "Project 3", href: "#" },
   { label: "Contact", href: "#contact" },
 ];
 

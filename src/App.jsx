@@ -3,16 +3,22 @@ import StartPage from './StartPage'
 import { AuthProvider, useAuth } from './helpdesk/AuthContext'
 import ProtectedRoute from './helpdesk/ProtectedRoute'
 import Login from './helpdesk/Login'
+import TicketList from './helpdesk/TicketList';
 
-// Temporary placeholder until we build the ticket list
 function HelpdeskHome() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
   return (
-    <div>
-      <p>Logged in as {user.name} ({user.type})</p>
-      <button onClick={logout}>Log out</button>
+    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '1rem' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1>Help Desk</h1>
+        <div>
+          {user.name} ({user.type}){' '}
+          <button onClick={logout}>Log out</button>
+        </div>
+      </header>
+      <TicketList />
     </div>
-  )
+  );
 }
 
 export default function App() {
