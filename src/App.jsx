@@ -6,6 +6,7 @@ import Login from './helpdesk/Login'
 import TicketList from './helpdesk/TicketList';
 import Layout from './helpdesk/Layout';
 import TicketDetail from './helpdesk/TicketDetail';
+import NewTicket from './helpdesk/CreateTicket';
 
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/helpdesk" element={<ProtectedRoute><Layout><TicketList /></Layout></ProtectedRoute>} />
         <Route path="/helpdesk/tickets/:id" element={<ProtectedRoute><Layout><TicketDetail /></Layout></ProtectedRoute>} />
         <Route path="/" element={<StartPage />} />
+        <Route path="/helpdesk/tickets/new" element={<ProtectedRoute><Layout><NewTicket /></Layout></ProtectedRoute>} />
       </Routes>
     </AuthProvider>
   )

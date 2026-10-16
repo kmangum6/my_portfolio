@@ -38,6 +38,10 @@ export default function TicketList() {
 
     return (
         <div>
+            <div style={{ display: 'flex', justifyContent: 'space=between', alignItems: 'center' }}>
+                <h2>Tickets</h2>
+                <Link to="/helpdesk/tickets/new">Create a Ticket</Link>
+            </div>
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', margin: '1rem 0' }}>
                 <input
                     type="search"
