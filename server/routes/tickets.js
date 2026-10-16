@@ -40,14 +40,14 @@ function logEvent(ticketId, actorId, type, oldValue, newValue) {
 // ---------- DROPDOWN OPTIONS ----------
 router.get('/options', (req, res) => {
   const categories = db.prepare('SELECT id, name FROM category ORDER BY name').all();
-  const agents = isStaff(re.user)
+  const agents = isStaff(req.user)
     ? db.prepare(`
       SELECT id, name FROM user
       WHERE type IN ('agent','admin') AND status = 'active'
       ORDER BY name
     `).all()
     : [];
-  res.json({ statuses: STATUSES, priorities: PRIORITIES, categories });
+  res.json({ statuses: STATUSES, priorities: PRIORITIES, categories, agents });
 });
 
 // ---------- LIST ----------
@@ -210,12 +210,16 @@ router.patch('/:id', requireRole('agent', 'admin'), (req, res) => {
       assigned_to: 'assigned',
       category_id: 'category_changed',
     };
+
+    const nameOf = (table, id) =>
+      id == null ? null : (db.prepare(`SELECT name FROM ${table} WHERE id = ?`).get(id)?.name ?? String(id));
+
     for (const [col, newVal] of Object.entries(changes)) {
       let value_from = ticket[col] == null ? null : String(ticket[col]);
       let value_to = newVal == null ? null : String(newVal);
 
-      if (col === 'assigned_to') { value_from = nameOf('user', ticket[col]); value_to == NameOf('user', newVal); }
-      if (col == 'category_id') { value_from = nameOf('category', ticket[col]); value_to = nameOf('category', newVal); }
+      if (col === 'assigned_to') { value_from = nameOf('user', ticket[col]); value_to = nameOf('user', newVal); }
+      if (col === 'category_id') { value_from = nameOf('category', ticket[col]); value_to = nameOf('category', newVal); }
 
       logEvent(ticket.id, req.user.id, eventTypes[col], value_from, value_to);
     }
