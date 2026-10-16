@@ -79,7 +79,7 @@ export default function TicketList() {
                 <tbody>
                     {data.tickets.map((t) => (
                         <tr key={t.id}>
-                            <td><Link to={`./helpdesk/tickets/${t.id}`}>{t.title}</Link></td>
+                            <td><Link to={`/helpdesk/tickets/${t.id}`}>{t.title}</Link></td>
                             <td>{label(t.status)}</td>
                             <td>{t.priority}</td>
                             <td>{t.category_name ?? '-'}</td>
