@@ -62,7 +62,7 @@ export default function TicketDetail() {
     if (!ticket) {
         return (
             <div>
-                <p><Link to="/helpdesk">&larr; Back to tickets</Link></p>
+                <p><Link to="/helpdesk">Back to tickets</Link></p>
                 {error ? <p role="alert" style={{ color: 'crimson' }}>{error}</p> : <p>Loading…</p>}
             </div>
         );
@@ -70,7 +70,7 @@ export default function TicketDetail() {
 
     return (
         <div>
-            <p><Link to="/helpdesk">&larr; Back to tickets</Link></p>
+            <p><Link to="/helpdesk">Back to tickets</Link></p>
 
             <h2>#{ticket.id} {ticket.title}</h2>
             <p style={{ color: 'gray' }}>
